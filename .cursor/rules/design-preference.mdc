@@ -1,0 +1,11 @@
+---
+description: 与记账项目一致的极简 UI 基准
+globs: "**/*.{html,css,js}"
+alwaysApply: false
+---
+
+# personal-blog 设计基准
+
+延续用户偏好：浅灰底、白侧栏、黑白灰、大标题、表格式列表、无渐变光晕与英文装饰标签。
+
+与 `accounting-web` 保持同一套视觉语言。

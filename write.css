@@ -1,0 +1,126 @@
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.write-tip {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 36rem;
+}
+
+.write-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.write-form .field span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.write-form input,
+.write-form textarea,
+.gate input,
+.setup input {
+  font: inherit;
+  font-size: 15px;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 10px 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.write-form textarea {
+  min-height: 200px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.write-form input:focus,
+.write-form textarea:focus,
+.setup input:focus,
+.gate input:focus {
+  outline: none;
+  border-bottom-color: var(--text);
+}
+
+.write-actions {
+  margin-top: 8px;
+}
+
+.submit {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--text);
+  color: var(--surface);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.text-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: 12px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toast {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #166534;
+}
+
+.toast.error {
+  color: #b45309;
+}
+
+.my-posts h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.my-post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.my-post-item button {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.my-post-item button:hover {
+  color: var(--text);
+}
