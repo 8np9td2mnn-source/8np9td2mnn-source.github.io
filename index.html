@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人博客</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1 class="site-name">你的名字</h1>
+      <p class="site-desc">记录想法、生活与成长。<br>慢写，写给自己看。</p>
+      <nav class="nav">
+        <a href="./index.html" class="active">文章</a>
+        <a href="./about.html">关于</a>
+      </nav>
+      <p class="sidebar-foot">© 2026</p>
+    </aside>
+
+    <main class="main">
+      <h2 class="page-title">文章</h2>
+      <p class="page-intro">共 <span id="post-count">—</span> 篇</p>
+      <ul id="post-list" class="post-list"></ul>
+      <p id="load-error" class="empty" hidden>文章加载失败，请稍后刷新。</p>
+    </main>
+  </div>
+
+  <script src="./blog-store.js"></script>
+  <script>
+    const list = document.getElementById("post-list");
+    const count = document.getElementById("post-count");
+    const loadError = document.getElementById("load-error");
+
+    loadPosts()
+      .then((posts) => {
+        const sorted = sortPosts(posts);
+        count.textContent = sorted.length;
+
+        sorted.forEach((post) => {
+          const item = document.createElement("li");
+          item.className = "post-item";
+          item.innerHTML = `
+            <div class="post-meta">
+              <time datetime="${post.date}">${post.date}</time>
+              <span class="post-tag">${post.tag}</span>
+            </div>
+            <h2><a href="./article.html?slug=${post.slug}">${post.title}</a></h2>
+            <p class="post-excerpt">${post.excerpt}</p>
+            <a class="read-link" href="./article.html?slug=${post.slug}">阅读全文</a>
+          `;
+          list.appendChild(item);
+        });
+      })
+      .catch(() => {
+        loadError.hidden = false;
+        count.textContent = "0";
+      });
+  </script>
+</body>
+</html>
