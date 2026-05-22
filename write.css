@@ -1,3 +1,11 @@
+.write-app {
+  max-width: 1200px;
+}
+
+.write-main {
+  padding: 32px 28px 64px;
+}
+
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -11,23 +19,42 @@
   font-size: 14px;
   color: var(--muted);
   line-height: 1.55;
-  max-width: 36rem;
+}
+
+.md-hint code {
+  font-size: 12px;
+  padding: 2px 6px;
+  background: var(--bg);
+  border-radius: 4px;
+  color: var(--text);
 }
 
 .write-form .field {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.write-form .field span,
+.editor-pane > span,
+.preview-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.meta-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
   margin-bottom: 20px;
 }
 
-.write-form .field span {
-  font-size: 12px;
-  color: var(--muted);
+.field-wide {
+  grid-column: 1 / -1;
 }
 
 .write-form input,
-.write-form textarea,
 .gate input,
 .setup input {
   font: inherit;
@@ -39,22 +66,101 @@
   color: var(--text);
 }
 
-.write-form textarea {
-  min-height: 200px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
 .write-form input:focus,
-.write-form textarea:focus,
 .setup input:focus,
 .gate input:focus {
   outline: none;
   border-bottom-color: var(--text);
 }
 
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.tool-btn {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tool-btn:hover {
+  background: var(--bg);
+  border-color: var(--line-strong);
+}
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.editor-pane textarea {
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 320px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.editor-pane textarea:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.preview-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.preview-body {
+  flex: 1;
+  min-height: 320px;
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--bg);
+}
+
+.preview-body:empty::before {
+  content: "在左侧输入内容后，这里会显示排版效果";
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .write-actions {
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .submit {
@@ -123,4 +229,18 @@
 
 .my-post-item button:hover {
   color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-body {
+    min-height: 200px;
+  }
+
+  .meta-fields {
+    grid-template-columns: 1fr;
+  }
 }

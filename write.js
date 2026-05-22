@@ -12,6 +12,8 @@ const saveSettingsBtn = document.getElementById("save-settings");
 const settingsToast = document.getElementById("settings-toast");
 
 const form = document.getElementById("write-form");
+const bodyInput = document.getElementById("body");
+const previewElement = document.getElementById("preview");
 const dateInput = document.getElementById("date");
 const publishBtn = document.getElementById("publish-btn");
 const publishToast = document.getElementById("publish-toast");
@@ -64,6 +66,47 @@ function initGate() {
   });
 }
 
+function updatePreview() {
+  const markdown = bodyInput.value;
+  if (!markdown.trim()) {
+    previewElement.innerHTML = "";
+    return;
+  }
+  previewElement.innerHTML = renderPostContent({
+    content: markdown,
+    format: "markdown",
+  });
+}
+
+function wrapSelection(before, after, placeholder) {
+  const start = bodyInput.selectionStart;
+  const end = bodyInput.selectionEnd;
+  const selected = bodyInput.value.slice(start, end) || placeholder;
+  const next = `${bodyInput.value.slice(0, start)}${before}${selected}${after}${bodyInput.value.slice(end)}`;
+  bodyInput.value = next;
+  const cursor = start + before.length + selected.length;
+  bodyInput.focus();
+  bodyInput.setSelectionRange(cursor, cursor);
+  updatePreview();
+}
+
+function applyToolbarAction(action) {
+  const actions = {
+    h1: () => wrapSelection("# ", "\n\n", "标题"),
+    h2: () => wrapSelection("## ", "\n\n", "小节"),
+    bold: () => wrapSelection("**", "**", "粗体"),
+    italic: () => wrapSelection("*", "*", "斜体"),
+    quote: () => wrapSelection("> ", "\n", "引用文字"),
+    code: () => wrapSelection("`", "`", "code"),
+    link: () => wrapSelection("[", "](https://)", "链接文字"),
+    ul: () => wrapSelection("- ", "\n", "列表项"),
+  };
+
+  if (actions[action]) {
+    actions[action]();
+  }
+}
+
 function initWorkspace() {
   const settings = getSettings();
   const defaultRepo =
@@ -72,8 +115,17 @@ function initWorkspace() {
       : "";
   repoInput.value = settings.repo || defaultRepo;
   tokenInput.value = settings.token || "";
+  updatePreview();
   renderRemotePosts();
 }
+
+document.querySelectorAll(".tool-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    applyToolbarAction(button.dataset.action);
+  });
+});
+
+bodyInput.addEventListener("input", updatePreview);
 
 saveSettingsBtn.addEventListener("click", () => {
   const repo = repoInput.value.trim();
@@ -123,7 +175,7 @@ async function renderRemotePosts() {
         <button type="button" data-slug="${post.slug}">删除</button>
       `;
       li.querySelector("button").addEventListener("click", async () => {
-        if (!confirm(`确定删除《${post.title}》吗？网站会同步更新。`)) {
+        if (!confirm(`确定删除《${post.title}》吗？`)) {
           return;
         }
         try {
@@ -157,7 +209,7 @@ form.addEventListener("submit", async (event) => {
   const date = dateInput.value;
   const tag = document.getElementById("tag").value.trim() || "随笔";
   const excerpt = document.getElementById("excerpt").value.trim();
-  const body = document.getElementById("body").value.trim();
+  const body = bodyInput.value.trim();
 
   if (!title || !excerpt || !body) {
     showToast(publishToast, "请填写标题、摘要和正文", true);
@@ -170,7 +222,8 @@ form.addEventListener("submit", async (event) => {
     date,
     tag,
     excerpt,
-    content: textToContent(body),
+    content: body,
+    format: "markdown",
   };
 
   publishBtn.disabled = true;
@@ -181,17 +234,14 @@ form.addEventListener("submit", async (event) => {
     form.reset();
     dateInput.value = new Date().toISOString().slice(0, 10);
     document.getElementById("tag").value = "随笔";
+    updatePreview();
     showToast(
       publishToast,
       `发布成功！共 ${total} 篇，约 1 分钟后在网站上可见。`
     );
     renderRemotePosts();
   } catch (error) {
-    showToast(
-      publishToast,
-      `${error.message}。若持续失败，请查看 README 里的备用发布方式。`,
-      true
-    );
+    showToast(publishToast, error.message, true);
   } finally {
     publishBtn.disabled = false;
     publishBtn.textContent = "发布到 GitHub（更新网站）";

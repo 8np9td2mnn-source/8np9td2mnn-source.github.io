@@ -50,6 +50,25 @@ function textToContent(text) {
     .join("\n");
 }
 
+function isHtmlContent(content) {
+  return /^\s*<(p|h[1-6]|ul|ol|blockquote|pre|div|article)/i.test(String(content).trim());
+}
+
+function renderPostContent(post) {
+  const raw = post.content || "";
+
+  if (post.format === "html" || (post.format !== "markdown" && isHtmlContent(raw))) {
+    return raw;
+  }
+
+  if (typeof marked !== "undefined") {
+    marked.setOptions({ breaks: true, gfm: true });
+    return marked.parse(raw);
+  }
+
+  return textToContent(raw);
+}
+
 function utf8ToBase64(text) {
   const bytes = new TextEncoder().encode(text);
   let binary = "";

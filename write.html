@@ -9,17 +9,17 @@
   <link rel="stylesheet" href="./write.css">
 </head>
 <body>
-  <div class="app">
+  <div class="app write-app">
     <aside class="sidebar">
       <h1 class="site-name">作者后台</h1>
-      <p class="site-desc">文章会推送到 GitHub，<br>网站约 1 分钟内自动更新。</p>
+      <p class="site-desc">支持 Markdown，<br>发布后访客可见排版效果。</p>
       <nav class="nav">
         <a href="./index.html">查看网站</a>
       </nav>
       <p class="sidebar-foot">请勿分享此页面链接</p>
     </aside>
 
-    <main class="main">
+    <main class="main write-main">
       <section id="gate" class="panel gate" hidden>
         <h2 class="page-title">输入访问密码</h2>
         <p class="write-tip">已在本地配置访问密码，请输入后继续。</p>
@@ -35,15 +35,15 @@
         <section class="panel setup">
           <h2 class="page-title">GitHub 发布设置</h2>
           <p class="write-tip">
-            只需设置一次。Token 只保存在你电脑的浏览器里，不会上传到博客网站。
+            只需设置一次。Token 只保存在你电脑的浏览器里。
           </p>
           <label class="field">
-            <span>仓库地址（格式：用户名/仓库名）</span>
+            <span>仓库地址</span>
             <input id="repo" type="text" placeholder="8np9td2mnn-source/8np9td2mnn-source.github.io">
           </label>
           <label class="field">
-            <span>GitHub Token（有仓库写入权限）</span>
-            <input id="token" type="password" placeholder="ghp_ 或 github_pat_ 开头" autocomplete="off">
+            <span>GitHub Token</span>
+            <input id="token" type="password" placeholder="ghp_ 开头" autocomplete="off">
           </label>
           <button type="button" id="save-settings" class="submit">保存设置</button>
           <p id="settings-toast" class="toast" hidden></p>
@@ -51,27 +51,52 @@
 
         <section class="panel">
           <h2 class="page-title">写新文章</h2>
+          <p class="write-tip md-hint">
+            正文使用 <strong>Markdown</strong>。例如：<code># 标题</code>、<code>**粗体**</code>、<code>- 列表</code>。右侧可实时预览。
+          </p>
+
           <form id="write-form" class="write-form">
-            <label class="field">
-              <span>标题</span>
-              <input id="title" type="text" required>
-            </label>
-            <label class="field">
-              <span>日期</span>
-              <input id="date" type="date" required>
-            </label>
-            <label class="field">
-              <span>标签</span>
-              <input id="tag" type="text" value="随笔">
-            </label>
-            <label class="field">
-              <span>摘要</span>
-              <input id="excerpt" type="text" required>
-            </label>
-            <label class="field">
-              <span>正文（段落之间空一行）</span>
-              <textarea id="body" required></textarea>
-            </label>
+            <div class="meta-fields">
+              <label class="field">
+                <span>标题</span>
+                <input id="title" type="text" required>
+              </label>
+              <label class="field">
+                <span>日期</span>
+                <input id="date" type="date" required>
+              </label>
+              <label class="field">
+                <span>标签</span>
+                <input id="tag" type="text" value="随笔">
+              </label>
+              <label class="field field-wide">
+                <span>摘要（列表页显示）</span>
+                <input id="excerpt" type="text" required>
+              </label>
+            </div>
+
+            <div class="editor-toolbar" role="toolbar" aria-label="Markdown 工具栏">
+              <button type="button" class="tool-btn" data-action="h1" title="一级标题">H1</button>
+              <button type="button" class="tool-btn" data-action="h2" title="二级标题">H2</button>
+              <button type="button" class="tool-btn" data-action="bold" title="粗体">B</button>
+              <button type="button" class="tool-btn" data-action="italic" title="斜体">I</button>
+              <button type="button" class="tool-btn" data-action="quote" title="引用">引用</button>
+              <button type="button" class="tool-btn" data-action="code" title="行内代码">代码</button>
+              <button type="button" class="tool-btn" data-action="link" title="链接">链接</button>
+              <button type="button" class="tool-btn" data-action="ul" title="无序列表">列表</button>
+            </div>
+
+            <div class="editor-layout">
+              <label class="editor-pane">
+                <span>正文（Markdown）</span>
+                <textarea id="body" placeholder="## 小节标题&#10;&#10;在这里写正文，**支持粗体**、列表等。&#10;&#10;- 第一点&#10;- 第二点" required></textarea>
+              </label>
+              <div class="preview-pane">
+                <span class="preview-label">实时预览</span>
+                <div id="preview" class="article-body preview-body"></div>
+              </div>
+            </div>
+
             <div class="write-actions">
               <button type="submit" class="submit" id="publish-btn">发布到 GitHub（更新网站）</button>
             </div>
@@ -80,7 +105,7 @@
         </section>
 
         <section class="panel my-posts">
-          <h3 class="panel-title">已发布文章（来自 GitHub）</h3>
+          <h3 class="panel-title">已发布文章</h3>
           <button type="button" id="refresh-posts" class="text-btn">刷新列表</button>
           <ul id="my-list"></ul>
           <p id="my-empty" class="empty">加载中…</p>
@@ -89,6 +114,7 @@
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
   <script src="./site.config.js"></script>
   <script src="config.local.js" onerror="void 0"></script>
   <script src="./blog-store.js"></script>
